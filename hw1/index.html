@@ -60,16 +60,14 @@
 				<figcaption>You can add images with captions!</figcaption>
 			</figure>
 
-			<!-- Overview Section -->
 			<h2>Overview</h2>
 			<p>
 				In this assignment, I built a complete rasterization pipeline. I began with filling in single color triangles, then implemented pixel supersampling to antialias, added functions that contained geometric transformations to manipulate shapes, and then implemented a function that uses barycentric interpolation to color the triangles. The final, most interesting and complicated part of the pipeline was figuring out how to integrate texture mapping. Keeping track of the different components was difficult, and the entire process was good practice for organizing my code. The algorithm for texture mapping I built is a decently sophisticated level sampling system, all according to the project spec, with mipmaps that compute the appropriate resolution of texture data based on the rate of change in the texture coordinates. Through the coding and testing processes, I learned how each type of supersampling, pixel sampling, and level sampling affect performance and visual quality, and I have a much deeper understanding of the tradeoffs between speed, memory usage, and antialiasing quality in rendering systems.
 			</p>
 
-			<!-- Task 1 -->
 			<h2>Task 1: Drawing Single-Color Triangles</h2>
 			<p>
-				For task 1, I implemented the function rasterize_triangle, which takes the mathematical definition of the triangle in the space and fills in the pixels whose centers are inside or exactly on the boundaries of the triangle. In my initial approach, I was trying to figure out a way to iterate over the boundaries of just the triangle’s lines, but I ended up settling for iterating over the bounding box. I made sure to test each pixel on the center, which is at (x + 0.5, y + 0.5). I first bound the region I would be possibly filling in to x_min, y_min, x_max, and y_max, which were sure to be within the screen’s dimensions. To find which points in the box are inside of the triangle, the bounding box is iterated over, and the edge function (formula found in the lecture notes) is used to see which side of each line the point is on. If the point was on all of the correct sides, the corresponding pixel would be colored in. I made the algorithm more efficient by computing constants before iterating through the bounding box. The edge values are incremented by a small value for each iteration of the code, so no time is wasted recomputing them. 
+				For task 1, I implemented the function <code> rasterize_triangle</code>, which takes the mathematical definition of the triangle in the space and fills in the pixels whose centers are inside or exactly on the boundaries of the triangle. In my initial approach, I was trying to figure out a way to iterate over the boundaries of just the triangle’s lines, but I ended up settling for iterating over the bounding box. I made sure to test each pixel on the center, which is at (x + 0.5, y + 0.5). I first bound the region I would be possibly filling in to <code> x_min</code>, <code> y_min</code>, <code> x_max</code>, and <code> y_max</code>, which were sure to be within the screen’s dimensions. To find which points in the box are inside of the triangle, the bounding box is iterated over, and the edge function (formula found in the lecture notes) is used to see which side of each line the point is on. If the point was on all of the correct sides, the corresponding pixel would be colored in. I made the algorithm more efficient by computing constants before iterating through the bounding box. The edge values are incremented by a small value for each iteration of the code, so no time is wasted recomputing them. 
 			</p>
 			<p>
 				The following table shows the performance improvements with and without optimizations:
@@ -96,29 +94,35 @@
 					<td>0.015532</td>
 				</tr>
 			</table>
+			<figure>
+ 				 <img src="images/task1.png" alt="Task 1 Screenshot" style="width:400px;">
+ 				 <figcaption>Task 1 Output</figcaption>
+			</figure>
 
-			<!-- Task 2 -->
 			<h2>Task 2: Antialiasing by Supersampling</h2>
 			<p>
-				For Task 2, I modified the <code>rasterize_triangle</code> function to implement supersampling. By subdividing each pixel into an n × n grid (with n determined by the sample rate), each subpixel is tested for inclusion inside the triangle. The color for each pixel is then computed as the average of its subpixels, resulting in smoother, antialiased edges.
+				For task 2, I implemented supersampling in the same <code> rasterize_triangle</code> function by changing the for loop of the function. The boundaries of iterating over stayed the same, and my approach involved the same function, but adding two more for loops to iterate over a single pixel. I divided each pixel into an n by n grid of even smaller pixels, where n is determined by the sample rate. I then checked to see if each subpixel was inside of the triangle, and then averaged all of the results of the subpixels to get the full pixel color. I used a buffer, <code> sample_buffer</code>, that stores the color for every subpixel. I then used the buffer in the function resolve_to_framebuffer to get the average color for each pixel. I also modified the <code> set_sample_rate</code> and <code> set_framebuffer_target</code> functions to accommodate the additional sample rate that was needed. 
+				Supersampling is useful because the pixels that lie on the edges of triangles are able to be filled in proportion to how much of the pixel lies in and on the triangle. This creates blurry lines that help the image show finer lines and angles, antialiasing the triangles. Otherwise, those same lines can be jagged or irregular looking based on how the pixels lie on the triangles. 
 			</p>
+			<figure>
+ 				 <img src="images/task1.png" alt="Task 1 Screenshot" style="width:400px;">
+ 				 <figcaption>Task 1 Output</figcaption>
+			</figure>
+
 			<p>
-				Supersampling is particularly useful for filling in pixels along the edges of triangles; as the sample rate increases, the jagged appearance of the edges is reduced. For example, a supersample rate of 16 produces noticeably smoother lines compared to a rate of 1.
+				As is shown above, all of the pixels that are on the tips of the skinny triangles are able to be seen as the rate of supersampling increases, rather than just the pixels who have their center within the lines. This smooths out the jagged look and antialiases the triangle.
 			</p>
 
-			<!-- Task 3 -->
 			<h2>Task 3: Transforms</h2>
 			<p>
 				For Task 3, I implemented the necessary matrix transformation functions. These functions allowed me to manipulate the geometry of the shapes. As a fun bonus, I even coded my cubeman to wear swimming floaties and wave!
 			</p>
 
-			<!-- Task 4 -->
 			<h2>Task 4: Barycentric Coordinates</h2>
 			<p>
 				Barycentric coordinates are used to determine the position of a point relative to the vertices of a triangle. They provide three weights that sum to 1, indicating how close the point is to each vertex. In my implementation of <code>rasterize_interpolated_color_triangle</code>, I calculated these weights for each pixel and used them to interpolate vertex colors across the triangle. This produced smooth color gradients—solid red, green, or blue at the corners, blending to purple or other colors in the center.
 			</p>
 
-			<!-- Task 5 -->
 			<h2>Task 5: "Pixel Sampling" for Texture Mapping</h2>
 			<p>
 				Pixel sampling involves taking a color from a texture map at a given coordinate and mapping it onto a screen pixel. In my <code>rasterize_textured_triangle</code> function, I modified the loop from <code>rasterize_interpolated_color_triangle</code> to incorporate texture sampling. I implemented two functions:
@@ -131,7 +135,6 @@
 				Bilinear sampling smooths hard edges by blending the colors of adjacent texels, while nearest sampling tends to produce a blocky or aliased result. Both methods involve converting the given texture coordinate into mipmap coordinates and ensuring the coordinates are clamped within valid bounds.
 			</p>
 
-			<!-- Task 6 -->
 			<h2>Task 6: "Level Sampling" with Mipmaps for Texture Mapping</h2>
 			<p>
 				Level sampling extends pixel sampling by selecting the appropriate mipmap level based on how quickly texture coordinates change on the screen. In this task, I modified the loop in <code>rasterize_textured_triangle</code> to compute an accumulator for the color, the subpixel position, and the barycentric coordinates. For each subpixel inside the triangle, the function computes both the barycentrics and the derivatives of the texture coordinates. These values are stored in a <code>SampleParams</code> structure and passed to the <code>Texture::sample</code> function.
