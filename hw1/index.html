@@ -46,19 +46,20 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
+			<h1>CS184/284A Spring 2025 Homework 1 Write-Up: Rasterizer</h1>
 			<div style="text-align: center;">By Cashus Puhvel</div>
 			<br>
+			<figure>
+				<img src="images/tower.png" alt="tower" style="width:90%"/>
+			</figure>
+
 			<p>
 				Link back to pages: <a href="https://cal-cs184-student.github.io/hw-webpages-cashman/">https://cal-cs184-student.github.io/hw-webpages-cashman/</a>
 			</p>
 			<p>
-				Link to GitHub repository: <a href="https://github.com/yourusername/yourrepo">github.com/yourusername/yourrepo</a>
+				Link to GitHub repository: <a href="(private for now)">private for now</a>
 			</p>
-			<figure>
-				<img src="images/tower.png" alt="tower" style="width:70%"/>
-			</figure>
-
+			
 			<h2>Overview</h2>
 			<p>
 				In this assignment, I built a complete rasterization pipeline. I began with filling in single color triangles, then implemented pixel supersampling to antialias, added functions that contained geometric transformations to manipulate shapes, and then implemented a function that uses barycentric interpolation to color the triangles. The final, most interesting and complicated part of the pipeline was figuring out how to integrate texture mapping. Keeping track of the different components was difficult, and the entire process was good practice for organizing my code. The algorithm for texture mapping I built is a decently sophisticated level sampling system, all according to the project spec, with mipmaps that compute the appropriate resolution of texture data based on the rate of change in the texture coordinates. Through the coding and testing processes, I learned how each type of supersampling, pixel sampling, and level sampling affect performance and visual quality, and I have a much deeper understanding of the tradeoffs between speed, memory usage, and antialiasing quality in rendering systems.
@@ -94,7 +95,7 @@
 				</tr>
 			</table>
 			<figure>
- 				 <img src="images/task1.png" alt="Task 1 Screenshot" style="width:50%;">
+ 				 <img src="images/task1.png" alt="Task 1 Screenshot" style="width:75%;">
  				 <figcaption>basic/test4.svg</figcaption>
 			</figure>
 
@@ -104,15 +105,15 @@
 				Supersampling is useful because the pixels that lie on the edges of triangles are able to be filled in proportion to how much of the pixel lies in and on the triangle. This creates blurry lines that help the image show finer lines and angles, antialiasing the triangles. Otherwise, those same lines can be jagged or irregular looking based on how the pixels lie on the triangles. 
 			</p>
 			<figure>
- 				 <img src="images/task2_1.png" alt="basic/test4.svg sampling rate 1" style="width:50%;">
+ 				 <img src="images/task2_1.png" alt="basic/test4.svg sampling rate 1" style="width:75%;">
  				 <figcaption>basic/test4.svg, sampling rate of 1</figcaption>
 			</figure>
 			<figure>
- 				 <img src="images/task2_4.png" alt="basic/test4.svg sampling rate 4" style="width:50%;">
+ 				 <img src="images/task2_4.png" alt="basic/test4.svg sampling rate 4" style="width:75%;">
  				 <figcaption>basic/test4.svg, sampling rate of 4</figcaption>
 			</figure>
 			<figure>
- 				 <img src="images/task2_16.png" alt="basic/test4.svg sampling rate 16" style="width:50%;">
+ 				 <img src="images/task2_16.png" alt="basic/test4.svg sampling rate 16" style="width:75%;">
  				 <figcaption>basic/test4.svg, sampling rate of 16</figcaption>
 			</figure>
 
@@ -125,21 +126,21 @@
 				For Task 3, I coded matrix transformation functions, letting me manipulate the geometry of the shapes that make up the cubeman. I decided to code my cubeman to have massive biceps and wave.
 			</p>
 			<figure>
- 				 <img src="images/task3.png" alt="robot" style="width:50%;">
+ 				 <img src="images/task3.png" alt="robot" style="width:75%;">
  				 <figcaption>my_robot.svg</figcaption>
 			</figure>
 
 
 			<h2>Task 4: Barycentric Coordinates</h2>
 			<figure>
- 				 <img src="images/task4_triangle.png" alt="triangle" style="width:50%;">
+ 				 <img src="images/task4_triangle.png" alt="triangle" style="width:75%;">
  				 <figcaption>Triangle with barycentric coordinates</figcaption>
 			</figure>
 			<p>
 				Barycentric coordinates are coordinates inside of a triangle that show how close each pixel is to each corner of the triangle. The coordinates are calculated through three weights from the proportional distance from each vertice, and their sum adds up to 1. By the proportion of the three weights, the pixel is filled with colors blended from each corner. As the image above shows, the pixels closest and on the corners are solid red, green and blue, and the pixels towards the center and the edges blend colors together (For example, the purple pixels mix red and blue). This is useful for added detail in shading, color, and texture in the rasterizer. <code>rasterize_interpolated_color_triangle</code> implements barycentric coordinates by using almost the same function as <code>rasterize_triangle</code>, but instead of just assigning the color to the whole triangle, I calculated the vertice weights for each pixel and adjusted the color values proportionately while iterating through. My approach for this function involved reusing almost all of the code from <code>rasterize_triangle</code>, and figuring out how to use the buffer to store the color made the rest of the code make sense. 
 			</p>
 			<figure>
- 				 <img src="images/task4_test7.png" alt="test7.svg" style="width:50%;">
+ 				 <img src="images/task4_test7.png" alt="test7.svg" style="width:75%;">
  				 <figcaption>basic/test7.svg</figcaption>
 			</figure>
 
@@ -151,19 +152,19 @@
 				I implemented pixel sampling in <code>rasterize_textured_triangle</code> by altering the for loop in <code>rasterize_interpolated_color_triangle</code>. I used functions <code>sample_nearest</code> and <code>sample_bilinear</code>, which both return colors, to gather the color from the texture mipmap to add it to the color buffer. <code>sample_nearest</code> implements nearest pixel sampling, and will return the color of the nearest texel to the given coordinate. <code>sample_bilinear</code> implements bilinear sampling, and will return the average color of the four closest texels. Both functions use the same logic of turning the given vector into mipmap coordinates while also making sure the coordinates are not out of bounds. The bilinear sampling is done by finding the four closest pixels, seeing how close each is to the actual point (to keep the proportion of the color correct), blending the top two pixels according to the proportion, blending the bottom two pixels according to the proportion, and then blending both results according the proportion. 
 			</p>
 			<figure>
- 				 <img src="images/task5_nearest1.png" alt="Nearest sampling rate 1" style="width:50%;">
+ 				 <img src="images/task5_nearest1.png" alt="Nearest sampling rate 1" style="width:75%;">
  				 <figcaption>Nearest sampling, sampling rate of 1</figcaption>
 			</figure>
 			<figure>
- 				 <img src="images/task5_bilinear1.png" alt="bilinear sampling rate 1" style="width:50%;">
+ 				 <img src="images/task5_bilinear1.png" alt="bilinear sampling rate 1" style="width:75%;">
  				 <figcaption>Bilinear sampling, sampling rate of 1</figcaption>
 			</figure>
 			<figure>
- 				 <img src="images/task5_nearest16.png" alt="Nearest sampling rate 16" style="width:50%;">
+ 				 <img src="images/task5_nearest16.png" alt="Nearest sampling rate 16" style="width:75%;">
  				 <figcaption>Nearest sampling, sampling rate of 16</figcaption>
 			</figure>
 			<figure>
- 				 <img src="images/task5_bilinear16.png" alt="bilinear sampling rate 16" style="width:50%;">
+ 				 <img src="images/task5_bilinear16.png" alt="bilinear sampling rate 16" style="width:75%;">
  				 <figcaption>Bilinear sampling, sampling rate of 16</figcaption>
 			</figure>
 
