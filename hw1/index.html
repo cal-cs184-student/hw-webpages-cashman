@@ -47,7 +47,7 @@
 	<body>
 		<div class="container">
 			<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
-			<div style="text-align: center;">Names: Cashus Puhvel</div>
+			<div style="text-align: center;">By Cashus Puhvel</div>
 			<br>
 			<p>
 				Link back to pages: <a href="https://cal-cs184-student.github.io/hw-webpages-cashman/">https://cal-cs184-student.github.io/hw-webpages-cashman/</a>
@@ -56,8 +56,7 @@
 				Link to GitHub repository: <a href="https://github.com/yourusername/yourrepo">github.com/yourusername/yourrepo</a>
 			</p>
 			<figure>
-				<img src="lion.jpg" alt="Lion" style="width:50%"/>
-				<figcaption>You can add images with captions!</figcaption>
+				<img src="images/tower.png" alt="tower" style="width:70%"/>
 			</figure>
 
 			<h2>Overview</h2>
@@ -171,77 +170,29 @@
 
 			<h2>Task 6: "Level Sampling" with Mipmaps for Texture Mapping</h2>
 			<p>
-				Level sampling extends pixel sampling by selecting the appropriate mipmap level based on how quickly texture coordinates change on the screen. In this task, I modified the loop in <code>rasterize_textured_triangle</code> to compute an accumulator for the color, the subpixel position, and the barycentric coordinates. For each subpixel inside the triangle, the function computes both the barycentrics and the derivatives of the texture coordinates. These values are stored in a <code>SampleParams</code> structure and passed to the <code>Texture::sample</code> function.
+				Level sampling is a process used in texture mapping to find the right mipmap level of a texture to display on the screen. To implement level sampling, I used most of the same function from task 5, but I altered the loop section. As the function loops over each pixel in the bounding box, it initializes an accumulator for the color, finds the subpixel position and barycentric coordinates, and uses the last two to see if the point is inside the triangle. If it is inside the triangle, the function computes the barycentric coordinate and the derivatives of the texture coordinates. Those coordinates and derivatives are then stored in a new <code>SampleParams sp</code>, and then the sample function is called on <code>sp</code>. The sample function is implemented to find the correct computation for the mipmap level based off of which level sampling method was input, and return the correct color corresponding to the coordinates. The sample function uses the logic provided by the project spec to handle each level case. The <code>get_level</code> function is also correctly implemented to find the correct level of the SampleParams data input. The output of the sample function is assigned to the Color object <code>tex_color</code>, the index to be input into the <code>sample_buffer</code> is calculated, and <code>tex_color</code> is inserted into <code>sample_buffer</code> at the calculated index.
 			</p>
 			<p>
-				The <code>Texture::sample</code> function then uses these parameters to compute the proper mipmap level:
+				Pixel sampling is the fastest method because it only picks one texel per pixel, meaning it needs a lot less memory and lower processing time. However, the use of only one pixel creates jagged edges and aliasing. Level sampling uses mipmaps and reduces aliasing by returning a lower resolution version of the texture when necessary, improving smoothness and quality without too much memory usage. It was also difficult to implement, which is another drawback. Supersampling has the best antialiasing with the huge amount of texture samples, but it comes at the cost of more memory usage and slower performance, due to the huge amount of texture samples. As shown below, the images get smoother and smoother when the texture mapping effects stack on top of each other, creating a much more high definition look. 
 			</p>
-			<ul>
-				<li><strong>L_ZERO:</strong> Always samples from the base (0th) mipmap level.</li>
-				<li><strong>L_NEAREST:</strong> Rounds the computed continuous level to the nearest integer.</li>
-				<li><strong>L_LINEAR:</strong> Computes a continuous mipmap level and blends between the two nearest levels (trilinear filtering).</li>
-			</ul>
-			<p>
-				Level sampling reduces aliasing by using a lower-resolution version of the texture when the texture is minified, balancing performance with image quality. In comparison, pixel sampling is faster but more prone to aliasing, while supersampling provides the best antialiasing at the cost of increased memory usage and slower performance.
-			</p>
-			<p>
-				The following combinations were tested using a custom PNG texture:
-			</p>
-			<ul>
-				<li>L_ZERO and P_NEAREST with a sample rate of 1</li>
-				<li>L_ZERO and P_LINEAR</li>
-				<li>L_NEAREST and P_NEAREST</li>
-				<li>L_NEAREST and P_LINEAR</li>
-			</ul>
-			<p>
-				Each combination demonstrates a tradeoff between speed, memory usage, and visual quality.
-			</p>
+			<figure>
+ 				 <img src="images/task6_zero_nearest.png" alt="zero nearest lion" style="width:70%;">
+ 				 <figcaption>L_ZERO and P_NEAREST with a sample rate of 1 on custom.png</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task6_zero_bilinear.png" alt="zero bilinear lion" style="width:70%;">
+ 				 <figcaption>L_ZERO and P_LINEAR with a sample rate of 1 on custom.png</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task6_nearest_nearest.png" alt="nearest nearest lion" style="width:70%;">
+ 				 <figcaption>L_NEAREST and P_NEAREST with a sample rate of 1 on custom.png</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task6_nearest_bilinear.png" alt="nearest bilinear lion" style="width:70%;">
+ 				 <figcaption>L_NEAREST and P_LINEAR with a sample rate of 1 on custom.png</figcaption>
+			</figure>
 
-			<!-- Task 7 -->
-			<h2>(Optional) Task 7: Extra Credit - Draw Something Creative!</h2>
-			<p>
-				For extra credit, I experimented with additional filtering methods such as anisotropic filtering and summed area tables. These methods further improve texture quality in extreme cases, though they require extra computational effort. I compared the performance and output quality of these techniques with standard nearest, bilinear, and trilinear sampling.
-			</p>
-
-			<!-- Using Your Own PNG Section -->
-			<h2>Using Your Own PNG Texture</h2>
-			<p>
-				To test different sampling methods, I created an SVG file that references a custom PNG texture. When the PNG file is located in the same folder as the SVG, it can be referenced simply by its name:
-			</p>
-			<pre>
-&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
-&lt;svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
-     xmlns:xlink="http://www.w3.org/1999/xlink" width="200px" height="200px" 
-     viewBox="0 0 200 200" xml:space="preserve"&gt;
-  &lt;texture filename="yosemite.png"/&gt;
-&lt;/svg&gt;
-			</pre>
-			<p>
-				By adjusting the <code>psm</code> (pixel sampling method) and <code>lsm</code> (level sampling method) settings in the rasterizer, the following combinations can be generated and compared:
-			</p>
-			<ul>
-				<li>L_ZERO and P_NEAREST</li>
-				<li>L_ZERO and P_LINEAR</li>
-				<li>L_NEAREST and P_NEAREST</li>
-				<li>L_NEAREST and P_LINEAR</li>
-			</ul>
-			<p>
-				After rendering, the 'S' hotkey can be used to capture screenshots for comparison.
-			</p>
-
-			<!-- Additional Notes -->
-			<h2>Additional Notes</h2>
-			<ul>
-				<li>You can also add code if you'd like, for example: <code>code code code</code></li>
-				<li>If you’d like to add math equations, you can write inline equations like so: \( a^2 + b^2 = c^2 \) or display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-			</ul>
-
-			<!-- Conclusion -->
-			<h2>Conclusion</h2>
-			<p>
-				This homework allowed me to explore a wide range of rasterization techniques—from basic triangle drawing to advanced texture mapping with mipmaps and supersampling. The project not only deepened my understanding of rendering pipelines and antialiasing methods, but it also taught me valuable lessons about balancing performance, memory usage, and image quality.
-			</p>
+			
 		</div>
 	</body>
 </html>
