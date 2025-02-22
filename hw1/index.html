@@ -50,7 +50,7 @@
 			<div style="text-align: center;">Names: Cashus Puhvel</div>
 			<br>
 			<p>
-				Link back to pages: (TODO) <a href="https://cal-cs184-student.github.io/hw-webpages-cashman/">https://cal-cs184-student.github.io/hw-webpages-cashman/</a>
+				Link back to pages: <a href="https://cal-cs184-student.github.io/hw-webpages-cashman/">https://cal-cs184-student.github.io/hw-webpages-cashman/</a>
 			</p>
 			<p>
 				Link to GitHub repository: <a href="https://github.com/yourusername/yourrepo">github.com/yourusername/yourrepo</a>
@@ -123,25 +123,51 @@
 
 			<h2>Task 3: Transforms</h2>
 			<p>
-				For Task 3, I implemented the necessary matrix transformation functions. These functions allowed me to manipulate the geometry of the shapes. As a fun bonus, I even coded my cubeman to wear swimming floaties and wave!
+				For Task 3, I coded matrix transformation functions, letting me manipulate the geometry of the shapes that make up the cubeman. I decided to code my cubeman to have massive biceps and wave.
 			</p>
+			<figure>
+ 				 <img src="images/task3.png" alt="robot" style="width:50%;">
+ 				 <figcaption>my_robot.svg</figcaption>
+			</figure>
+
 
 			<h2>Task 4: Barycentric Coordinates</h2>
+			<figure>
+ 				 <img src="images/task4_triangle.png" alt="triangle" style="width:50%;">
+ 				 <figcaption>Triangle with barycentric coordinates</figcaption>
+			</figure>
 			<p>
-				Barycentric coordinates are used to determine the position of a point relative to the vertices of a triangle. They provide three weights that sum to 1, indicating how close the point is to each vertex. In my implementation of <code>rasterize_interpolated_color_triangle</code>, I calculated these weights for each pixel and used them to interpolate vertex colors across the triangle. This produced smooth color gradients—solid red, green, or blue at the corners, blending to purple or other colors in the center.
+				Barycentric coordinates are coordinates inside of a triangle that show how close each pixel is to each corner of the triangle. The coordinates are calculated through three weights from the proportional distance from each vertice, and their sum adds up to 1. By the proportion of the three weights, the pixel is filled with colors blended from each corner. As the image above shows, the pixels closest and on the corners are solid red, green and blue, and the pixels towards the center and the edges blend colors together (For example, the purple pixels mix red and blue). This is useful for added detail in shading, color, and texture in the rasterizer. <code>rasterize_interpolated_color_triangle</code> implements barycentric coordinates by using almost the same function as <code>rasterize_triangle</code>, but instead of just assigning the color to the whole triangle, I calculated the vertice weights for each pixel and adjusted the color values proportionately while iterating through. My approach for this function involved reusing almost all of the code from <code>rasterize_triangle</code>, and figuring out how to use the buffer to store the color made the rest of the code make sense. 
 			</p>
+			<figure>
+ 				 <img src="images/task4_test7.png" alt="test7.svg" style="width:50%;">
+ 				 <figcaption>basic/test7.svg</figcaption>
+			</figure>
 
 			<h2>Task 5: "Pixel Sampling" for Texture Mapping</h2>
 			<p>
-				Pixel sampling involves taking a color from a texture map at a given coordinate and mapping it onto a screen pixel. In my <code>rasterize_textured_triangle</code> function, I modified the loop from <code>rasterize_interpolated_color_triangle</code> to incorporate texture sampling. I implemented two functions:
+				Pixel sampling is the process of taking the color from a texture map at a given point (or points) inside of a texture and mapping the color onto the screen pixels. Pixel sampling can be any method of taking samples of the original image. 
 			</p>
-			<ul>
-				<li><code>sample_nearest</code> – which performs nearest-neighbor sampling by selecting the color of the closest texel.</li>
-				<li><code>sample_bilinear</code> – which performs bilinear sampling by averaging the colors of the four nearest texels.</li>
-			</ul>
 			<p>
-				Bilinear sampling smooths hard edges by blending the colors of adjacent texels, while nearest sampling tends to produce a blocky or aliased result. Both methods involve converting the given texture coordinate into mipmap coordinates and ensuring the coordinates are clamped within valid bounds.
+				I implemented pixel sampling in <code>rasterize_textured_triangle</code> by altering the for loop in <code>rasterize_interpolated_color_triangle</code>. I used functions <code>sample_nearest</code> and <code>sample_bilinear</code>, which both return colors, to gather the color from the texture mipmap to add it to the color buffer. <code>sample_nearest</code> implements nearest pixel sampling, and will return the color of the nearest texel to the given coordinate. <code>sample_bilinear</code> implements bilinear sampling, and will return the average color of the four closest texels. Both functions use the same logic of turning the given vector into mipmap coordinates while also making sure the coordinates are not out of bounds. The bilinear sampling is done by finding the four closest pixels, seeing how close each is to the actual point (to keep the proportion of the color correct), blending the top two pixels according to the proportion, blending the bottom two pixels according to the proportion, and then blending both results according the proportion. 
 			</p>
+			<figure>
+ 				 <img src="images/task5_nearest1.png" alt="Nearest sampling rate 1" style="width:50%;">
+ 				 <figcaption>Nearest sampling, sampling rate of 1</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task5_bilinear1.png" alt="bilinear sampling rate 1" style="width:50%;">
+ 				 <figcaption>Bilinear sampling, sampling rate of 1</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task5_nearest16.png" alt="Nearest sampling rate 16" style="width:50%;">
+ 				 <figcaption>Nearest sampling, sampling rate of 16</figcaption>
+			</figure>
+			<figure>
+ 				 <img src="images/task5_bilinear16.png" alt="bilinear sampling rate 16" style="width:50%;">
+ 				 <figcaption>Bilinear sampling, sampling rate of 16</figcaption>
+			</figure>
+
 
 			<h2>Task 6: "Level Sampling" with Mipmaps for Texture Mapping</h2>
 			<p>
