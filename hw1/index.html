@@ -50,7 +50,7 @@
 			<div style="text-align: center;">Names: Cashus Puhvel</div>
 			<br>
 			<p>
-				Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+				Link back to pages: (TODO) <a href="https://cal-cs184-student.github.io/hw-webpages-cashman/">https://cal-cs184-student.github.io/hw-webpages-cashman/</a>
 			</p>
 			<p>
 				Link to GitHub repository: (TODO) <a href="https://github.com/yourusername/yourrepo">github.com/yourusername/yourrepo</a>
@@ -63,16 +63,13 @@
 			<!-- Overview Section -->
 			<h2>Overview</h2>
 			<p>
-				In this assignment, I built a complete rasterization pipeline. I began by implementing single-color triangles, then added pixel supersampling for antialiasing, and incorporated geometric transformations to manipulate shapes. The most challenging and interesting part was integrating texture mapping. I implemented a sophisticated level sampling system using mipmaps that computes the appropriate texture resolution based on the rate of change in texture coordinates. Through coding and testing, I learned how supersampling, pixel sampling, and level sampling each affect performance and visual quality, and I gained a deeper understanding of the tradeoffs between speed, memory usage, and antialiasing quality.
+				In this assignment, I built a complete rasterization pipeline. I began with filling in single color triangles, then implemented pixel supersampling to antialias, added functions that contained geometric transformations to manipulate shapes, and then implemented a function that uses barycentric interpolation to color the triangles. The final, most interesting and complicated part of the pipeline was figuring out how to integrate texture mapping. Keeping track of the different components was difficult, and the entire process was good practice for organizing my code. The algorithm for texture mapping I built is a decently sophisticated level sampling system, all according to the project spec, with mipmaps that compute the appropriate resolution of texture data based on the rate of change in the texture coordinates. Through the coding and testing processes, I learned how each type of supersampling, pixel sampling, and level sampling affect performance and visual quality, and I have a much deeper understanding of the tradeoffs between speed, memory usage, and antialiasing quality in rendering systems.
 			</p>
 
 			<!-- Task 1 -->
 			<h2>Task 1: Drawing Single-Color Triangles</h2>
 			<p>
-				For Task 1, I implemented the <code>rasterize_triangle</code> function. This function takes the mathematical definition of a triangle and fills in the pixels whose centers are inside—or exactly on—the triangle's boundaries. Initially, I explored iterating over just the triangle’s edges, but eventually I settled on iterating over the triangle’s bounding box.
-			</p>
-			<p>
-				Each pixel is tested at its center (x + 0.5, y + 0.5) against the edge function (as described in lecture notes) to determine if it lies inside the triangle. To improve efficiency, constants were precomputed before the bounding box iteration and edge values were incremented rather than recomputed at each step.
+				For task 1, I implemented the function rasterize_triangle, which takes the mathematical definition of the triangle in the space and fills in the pixels whose centers are inside or exactly on the boundaries of the triangle. In my initial approach, I was trying to figure out a way to iterate over the boundaries of just the triangle’s lines, but I ended up settling for iterating over the bounding box. I made sure to test each pixel on the center, which is at (x + 0.5, y + 0.5). I first bound the region I would be possibly filling in to x_min, y_min, x_max, and y_max, which were sure to be within the screen’s dimensions. To find which points in the box are inside of the triangle, the bounding box is iterated over, and the edge function (formula found in the lecture notes) is used to see which side of each line the point is on. If the point was on all of the correct sides, the corresponding pixel would be colored in. I made the algorithm more efficient by computing constants before iterating through the bounding box. The edge values are incremented by a small value for each iteration of the code, so no time is wasted recomputing them. 
 			</p>
 			<p>
 				The following table shows the performance improvements with and without optimizations:
