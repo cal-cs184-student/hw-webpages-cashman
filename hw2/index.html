@@ -94,14 +94,14 @@
 				  <img src="writeupimages/part1/7.png" width="400px"/>
 				  <figcaption>Completed Bezier curve</figcaption>
 				</td>
-			  </tr>
-			  <tr>
 				<td style="text-align: center;">
 				  <img src="writeupimages/part1/onlycurve.png" width="400px"/>
 				  <figcaption>Bezier curve without intermediate control points</figcaption>
 				</td>
+			  </tr>
+			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part1/mycurve.png" width="400px"/>
+				  <img src="writeupimages/part1/mycurve.png" width="800px"/>
 				  <figcaption>Modified curve</figcaption>
 				</td>
 			  </tr>
@@ -115,7 +115,7 @@
 		de Casteljau’s algorithm can be extended to Bezier surfaces with the same approach that is used for curves, but we use de Casteljau's algorithm twice. To implement this, I used de Casteljau’s algorithm down each row and then down the columns of the control points, finally returning a single point on the Bezier surface. I first reduced each row of the control points to a single point with the function <code>evaluate1D</code>, which repeatedly calls the <code>Vector3D</code> version of <code>evaluateStep</code> along the values in one row, returning the one point that is left. In the function <code>evaluate</code>, I call <code>evaluate1D</code> on all of the rows in the control points first, with parameter <code>u</code>, and I call <code>evaluate1D</code> again on the resulting list of points from the rows, with parameter <code>v</code>. I assigned the first call to an intermediate variable <code>x</code> and then the last call of <code>evaluate1D</code> is returned as the final point. 
 
 		<figure>
-			<img src="writeupimages/part2/teapot.png" alt="teapot" style="width:50%"/>
+			<img src="writeupimages/part2/teapot.png" alt="teapot" width="800px" />
 			<figcaption>teapot.bez with Bezier surfaces</figcaption>
 		</figure>
 
@@ -197,15 +197,15 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/beetle.png" width="400px"/>
+				  <img src="writeupimages/part6/beetle.png" width="266px"/>
 				  <figcaption>Mesh before upsampling</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/beetle2.png" width="400px"/>
+				  <img src="writeupimages/part6/beetle2.png" width="266px"/>
 				  <figcaption>Mesh upsampling round one</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/beetle3.png" width="400px"/>
+				  <img src="writeupimages/part6/beetle3.png" width="266px"/>
 				  <figcaption>Mesh upsampling round two</figcaption>
 				</td>
 			  </tr>
@@ -236,15 +236,15 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin1.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin1.png" width="266px"/>
 				  <figcaption>Before</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin2.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin2.png" width="266px"/>
 				  <figcaption>Upsampling round one</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin3.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin3.png" width="266px"/>
 				  <figcaption>Upsampling round two</figcaption>
 				</td>
 			  </tr>
@@ -258,23 +258,23 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/notsymmetric1.png" width="400px"/>
+				  <img src="writeupimages/part6/notsymmetric1.png" width="160px"/>
 				  <figcaption>Normal cube</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/notsymmetric2.png" width="400px"/>
+				  <img src="writeupimages/part6/notsymmetric2.png" width="160px"/>
 				  <figcaption>Upsampling round one</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/notsymmetric3.png" width="400px"/>
+				  <img src="writeupimages/part6/notsymmetric3.png" width="160px"/>
 				  <figcaption>Upsampling round two</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/notsymmetric4.png" width="400px"/>
+				  <img src="writeupimages/part6/notsymmetric4.png" width="160px"/>
 				  <figcaption>Upsampling round three</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/notsymmetric5.png" width="400px"/>
+				  <img src="writeupimages/part6/notsymmetric5.png" width="160px"/>
 				  <figcaption>Upsampling round four</figcaption>
 				</td>
 			  </tr>
@@ -286,19 +286,19 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin1.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin1.png" width="200px"/>
 				  <figcaption>Cube with pre-processing (all faces split)</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin2.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin2.png" width="200px"/>
 				  <figcaption>Upsampling round one</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin3.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin3.png" width="200px"/>
 				  <figcaption>Upsampling round two</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin3.png" width="400px"/>
+				  <img src="writeupimages/part6/edgesmovingin3.png" width="200px"/>
 				  <figcaption>Upsampling round three</figcaption>
 				</td>
 			  </tr>
