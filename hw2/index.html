@@ -61,47 +61,47 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/1.png" width="400px"/>
+				  <img src="writeupimages/part1/1.png" width="400px"/>
 				  <figcaption>First 6 control points</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/2.png" width="400px"/>
+				  <img src="writeupimages/part1/2.png" width="400px"/>
 				  <figcaption>1st step of de Casteljau's algorithm</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/3.png" width="400px"/>
+				  <img src="writeupimages/part1/3.png" width="400px"/>
 				  <figcaption>2nd step</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/4.png" width="400px"/>
+				  <img src="writeupimages/part1/4.png" width="400px"/>
 				  <figcaption>3rd step</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/5.png" width="400px"/>
+				  <img src="writeupimages/part1/5.png" width="400px"/>
 				  <figcaption>4th step</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/6.png" width="400px"/>
+				  <img src="writeupimages/part1/6.png" width="400px"/>
 				  <figcaption>5th step (final point)</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/7.png" width="400px"/>
+				  <img src="writeupimages/part1/7.png" width="400px"/>
 				  <figcaption>Completed Bezier curve</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/onlycurve.png" width="400px"/>
+				  <img src="writeupimages/part1/onlycurve.png" width="400px"/>
 				  <figcaption>Bezier curve without intermediate control points</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part1/mycurve.png" width="400px"/>
+				  <img src="writeupimages/part1/mycurve.png" width="400px"/>
 				  <figcaption>Modified curve</figcaption>
 				</td>
 			  </tr>
@@ -115,7 +115,7 @@
 		de Casteljau’s algorithm can be extended to Bezier surfaces with the same approach that is used for curves, but done twice. To implement this, I used de Casteljau’s algorithm down each row and then down the columns of the control points, finally returning a single point on the Bezier surface. I first reduced each row of the control points to a single point with the function <code>evaluate1D</code>, which repeatedly calls the <code>Vector3D</code> version of <code>evaluateStep</code> along the values in one row, returning the one point that is left. In the function <code>evaluate</code>, I call <code>evaluate1D</code> on all of the rows in the control points first, with parameter <code>u</code>, and I call <code>evaluate1D</code> again on the resulting list of points from the rows, with parameter <code>v</code>. I assigned the first call to an intermediate variable <code>x</code> and then the last call of <code>evaluate1D</code> is returned as the final point. 
 
 		<figure>
-			<img src="/writeupimages/part2/teapot.png" alt="teapot" style="width:50%"/>
+			<img src="writeupimages/part2/teapot.png" alt="teapot" style="width:50%"/>
 			<figcaption>teapot.bez with Bezier surfaces</figcaption>
 		</figure>
 
@@ -130,11 +130,11 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part3/not.png" width="400px"/>
+				  <img src="writeupimages/part3/not.png" width="400px"/>
 				  <figcaption>teapot.dae without area-weighted vertex normals</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="/writeupimages/part3/smooth.png" width="400px"/>
+				  <img src="writeupimages/part3/smooth.png" width="400px"/>
 				  <figcaption>teapot.dae with area-weighted vertex normals</figcaption>
 				</td>
 			  </tr>
@@ -142,7 +142,23 @@
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		I implemented the edge flip operation by creating many iterators that pointed to: all sides of both directional triangles and all edges, vertices, and faces that were involved with the edge flip. The edge is then checked if it is a boundary edge or not, and returned if it is. I then reset all of the neighbors of each halfedgeIter to the correct elements they should point to after the edge flip, and then reset all of the vertice, edge, and face pointers to the correct new half edges. I used a few pages of paper to draw out this operation and to try and figure out what other elements of the mesh I was forgetting to update. Even when I was checking every single pointer’s operations over and over and over again, I was stuck for a while trying to figure out why my triangles would disappear when I would try multiple edge flips. I figured out that the buggy code was in the portion of code that reassigned the edge iterator’s halfedge pointers, and I was reassigning certain edges the wrong halfedge. 
+
+		<p>Mesh before and after edge flips:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="writeupimages/part4/noflips.png" width="400px"/>
+				  <figcaption>teapot.dae without edge flips</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="writeupimages/part4/flips.png" width="400px"/>
+				  <figcaption>teapot.dae with edge flips</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
