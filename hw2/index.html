@@ -39,8 +39,7 @@
 		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw2-brah">https://github.com/cal-cs184-student/sp25-hw2-brah</a>
 
 		<figure>
-			<img src="teapot.png" alt="Teapot" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<img src="writeupimages/monster.png" alt="Teapot" style="width:50%"/>
 		</figure>
 
 		<!--
@@ -48,7 +47,9 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this homework, I implemented functions that draw Bezier curves and surfaces from control points, implemented area weighted vertex normal calculation for Phong shading, implemented edge flipping and splitting in the half-edge data structure, and implemented full mesh upsampling with loop subdivision. This project has given me an in-depth understanding of how shapes of objects are represented in meshes by using the Bezier control points and the half-edge data structure. I found it extremely troublesome to implement half-edge mesh operations, such as flipping edges and splitting edges, with the complex pointer manipulation and reassignment. In the end, it was extremely satistfying to find myself mastering the data structure and completing the project. This project was difficult but rewarding, and it was very interesting to see what goes on at this foundational layer of computer graphics. The patterns that are created from manipulating meshes are shown and explored below. 
+
+
 
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
@@ -101,7 +102,7 @@
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part1/mycurve.png" width="800px"/>
+				  <img src="writeupimages/part1/mycurve.png" width="400px"/>
 				  <figcaption>Modified curve</figcaption>
 				</td>
 			  </tr>
@@ -197,7 +198,7 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/beetle.png" width="266px"/>
+				  <img src="writeupimages/part6/beetle1.png" width="266px"/>
 				  <figcaption>Mesh before upsampling</figcaption>
 				</td>
 				<td style="text-align: center;">
@@ -211,7 +212,6 @@
 			  </tr>
 			</table>
 		</div>
-
 
 		After loop subdivision, sharp corners and edges in the mesh are shrunk and moved inwards into the rest of the mesh as can be seen in the images below. In the cube images, the effect of loop subdivision on a sharp corner can be seen, and in the beetle mesh images, shrinking can be seen on the edges after each step of loop subdivision. These effects can be reduced by pre-splitting edges, as is shown in the next cube example. 
 
@@ -286,19 +286,19 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin1.png" width="200px"/>
+				  <img src="writeupimages/part6/symmetric1.png" width="200px"/>
 				  <figcaption>Cube with pre-processing (all faces split)</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin2.png" width="200px"/>
+				  <img src="writeupimages/part6/symmetric2.png" width="200px"/>
 				  <figcaption>Upsampling round one</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin3.png" width="200px"/>
+				  <img src="writeupimages/part6/symmetric3.png" width="200px"/>
 				  <figcaption>Upsampling round two</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="writeupimages/part6/edgesmovingin3.png" width="200px"/>
+				  <img src="writeupimages/part6/symmetric4.png" width="200px"/>
 				  <figcaption>Upsampling round three</figcaption>
 				</td>
 			  </tr>
